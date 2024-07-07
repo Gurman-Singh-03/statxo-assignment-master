@@ -53,11 +53,13 @@ function App() {
         <select name="actionType" onChange={handleInputChange} required>
           <option value="Type1">Type1</option>
           <option value="Type2">Type2</option>
+          <option value="Type3">Type3</option>
         </select>
         <input type="text" name="actionNumber" placeholder="Action Number" onChange={handleInputChange} required />
         <select name="actionName" onChange={handleInputChange} required>
           <option value="Action1">Action1</option>
           <option value="Action2">Action2</option>
+          <option value="Action3">Action3</option>
         </select>
         <select name="Impact" onChange={handleInputChange} required>
           <option value="Low">Low</option>
