@@ -21,15 +21,26 @@ function App() {
   };
 
   const handleEditChange = (id, name, value) => {
-    const updatedData = data.map(item => item.id === id ? {...item, [name]: value} : item);
+    const updatedData = data.map(item => 
+      item.id === id ? {...item, [name]: ['quantity', 'amount'].includes(name) ? parseFloat(value) : value} : item
+    );
     setData(updatedData);
   };
 
   const handleSave = () => {
-    data.forEach(item => {
+    const savePromises = data.map(item => 
       axios.put(`http://localhost:5000/data/${item.id}`, item)
-        .catch(error => console.error(error));
-    });
+    );
+    
+    Promise.all(savePromises)
+      .then(() => {
+        console.log('All changes saved successfully');
+        return axios.get('http://localhost:5000/data');
+      })
+      .then(response => {
+        setData(response.data);
+      })
+      .catch(error => console.error('Error saving changes:', error));
   };
 
   const handleSubmit = (e) => {
@@ -87,30 +98,59 @@ function App() {
           {data.map((item) => (
             <tr key={item.id}>
               <td>{item.id}</td>
-              <td><input type="number" value={item.amount} onChange={(e) => handleEditChange(item.id, 'amount', e.target.value)} /></td>
-              <td><select value={item.actionName} onChange={(e) => handleEditChange(item.id, 'actionName', e.target.value)}>
-                <option value="Action1">Action1</option>
-                <option value="Action2">Action2</option>
-              </select></td>
-              <td><select value={item.actionType} onChange={(e) => handleEditChange(item.id, 'actionType', e.target.value)}>
-                <option value="Type1">Type1</option>
-                <option value="Type2">Type2</option>
-              </select></td>
+              <td>
+                <input 
+                  type="number" 
+                  value={item.quantity} 
+                  onChange={(e) => handleEditChange(item.id, 'quantity', e.target.value)} 
+                />
+              </td>
+              <td>
+                <input 
+                  type="number" 
+                  value={item.amount} 
+                  onChange={(e) => handleEditChange(item.id, 'amount', e.target.value)} 
+                />
+              </td>
               <td>{item.postingYear}</td>
               <td>{item.postingMonth}</td>
+              <td>
+                <select 
+                  value={item.actionType} 
+                  onChange={(e) => handleEditChange(item.id, 'actionType', e.target.value)}
+                >
+                  <option value="Type1">Type1</option>
+                  <option value="Type2">Type2</option>
+                </select>
+              </td>
               <td>{item.actionNumber}</td>
-              <td>{item.actionName}</td>
-              <td>{isAdmin ? <select value={item.status} onChange={(e) => handleEditChange(item.id, 'status', e.target.value)}>
-                <option value="Pending">Pending</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Approved">Approved</option>
-              </select> : item.status}</td>
+              <td>
+                <select 
+                  value={item.actionName} 
+                  onChange={(e) => handleEditChange(item.id, 'actionName', e.target.value)}
+                >
+                  <option value="Action1">Action1</option>
+                  <option value="Action2">Action2</option>
+                </select>
+              </td>
+              <td>
+                {isAdmin ? (
+                  <select 
+                    value={item.status} 
+                    onChange={(e) => handleEditChange(item.id, 'status', e.target.value)}
+                  >
+                    <option value="Pending">Pending</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Approved">Approved</option>
+                  </select>
+                ) : item.status}
+              </td>
               <td>{item.Impact}</td>
             </tr>
           ))}
         </tbody>
       </table>
-      <button onClick={handleSave}>Save Changes</button>
+      {isAdmin && <button onClick={handleSave}>Save Changes</button>}
     </div>
   );
 }
