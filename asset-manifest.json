@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/statxo-assignment-master/static/css/main.6cce9c31.css",
+    "main.js": "/statxo-assignment-master/static/js/main.dd97b6b2.js",
+    "index.html": "/statxo-assignment-master/index.html",
+    "main.6cce9c31.css.map": "/statxo-assignment-master/static/css/main.6cce9c31.css.map",
+    "main.dd97b6b2.js.map": "/statxo-assignment-master/static/js/main.dd97b6b2.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6cce9c31.css",
+    "static/js/main.dd97b6b2.js"
+  ]
+}
